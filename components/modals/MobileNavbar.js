@@ -63,7 +63,7 @@ const MobileNavbar = ({ navLinks = [] }) => {
 							<ul className='w-full space-y-6 text-center'>
 								{navLinks.map((link, index) => (
 									<li key={index}>
-										<Link href={link.href} onClick={toggleNav} className='block w-full text-2xl font-semibold border border-dark shadow-soft py-2 transition-all duration-200'>
+										<Link href={link.href} onClick={toggleNav} className='block w-full text-subheading border border-dark/50  rounded py-2 transition-all duration-200'>
 											{link.title}
 										</Link>
 									</li>

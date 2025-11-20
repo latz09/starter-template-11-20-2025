@@ -180,7 +180,7 @@ html {
 }
 /* CONTACT FORM */
 .form-container {
-	@apply w-[75vw] mx-auto p-8;
+	@apply w-full lg:w-[75vw] mx-auto p-8;
 }
 
 .form-header {
@@ -214,7 +214,7 @@ html {
 }
 
 .form-submit {
-	@apply mx-auto bg-dark/20 text-button border p-4
+	@apply mx-auto bg-primary text-button text-white rounded border p-4
 		hover:opacity-90 active:opacity-80
 		disabled:opacity-50 disabled:cursor-not-allowed
 		transition-all duration-200;
