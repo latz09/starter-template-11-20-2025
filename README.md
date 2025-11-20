@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Latz Web Design – Project Starter
 
-## Getting Started
+This repo is the base template I use for new client projects at Latz Web Design.
+It’s built to create fast, mobile-first, conversion-focused websites that are easy to maintain and scale.
 
-First, run the development server:
+Under the hood, it uses a modern Jamstack setup with Next.js, React, and Tailwind CSS, and is optimized for deployment on Vercel.
 
-```bash
-npm run dev
+Tech Stack
+
+Next.js (App Router) – Server components, routing, and API routes
+
+React – UI components
+
+Tailwind CSS – Utility-first styling
+
+Framer Motion – Smooth, modern animations (where needed)
+
+Vercel – Hosting, deployments, and analytics
+
+next/font / Geist – Optimized fonts out of the box
+
+Some projects may also include a Sanity CMS setup for client editing and structured content. When that’s the case, there will be a /sanity folder and its own small README.
+
+Getting Started
+
+Install dependencies
+
+npm install
 # or
-yarn dev
+pnpm install
+# or
+yarn install
+
+
+Set up environment variables
+
+Create a .env.local file in the project root.
+
+Copy from .env.example if present, and fill in any required keys (API keys, project IDs, etc.).
+
+Run the development server
+
+npm run dev
 # or
 pnpm dev
 # or
-bun dev
-```
+yarn dev
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Open the site
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Visit http://localhost:3000
+ in your browser.
 
-## Learn More
+Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+High-level layout (may vary slightly per project):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+app/ – App Router pages, layouts, and route handlers
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+components/ – Reusable UI components
 
-## Deploy on Vercel
+lib/ – Utilities, helpers, and config
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+public/ – Static assets (images, icons, etc.)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+styles/ – Tailwind config and global styles
+
+sanity/ (optional) – Sanity schemas, config, and studio setup
+
+The homepage usually lives at:
+
+app/page.tsx   or   app/page.js
+
+Common Scripts
+npm run dev       # Start the local dev server
+npm run build     # Create an optimized production build
+npm run start     # Run the production server (after build)
+npm run lint      # Run linting
+
+
+(Use yarn or pnpm equivalents if that’s your package manager of choice.)
+
+Deployment
+
+This starter is set up to deploy smoothly on Vercel:
+
+Connect the repository to Vercel.
+
+Add the same environment variables from .env.local into the project settings on Vercel.
+
+Push to the main branch (or your selected production branch) to trigger a deploy.
+
+For more details, see Vercel’s docs on deploying Next.js apps.
+
+Notes for Collaborators / Future Devs
+
+The goal of this setup is to keep things lean, fast, and maintainable—no bloated plugins or heavy page builders.
+
+Animations and interactions should support the content and conversion goals, not distract from them.
+
+If you’re adding new sections or pages, keep the existing component structure, naming, and Tailwind utility patterns consistent.
+
+If you’re jumping into this project and have questions about structure or conventions, treat this README as your starting map and build from there.
