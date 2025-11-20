@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Oswald:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--font-body: 'Lato', sans-serif;
+	--font-heading: 'Oswald', sans-serif;
+}
+
+body {
+	@apply bg-light font-body;
+	@apply antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		/* Prevent orphans and widows */
+		orphans: 2;
+		widows: 2;
+
+		/* Try to keep words together when possible */
+		word-break: normal;
+		overflow-wrap: break-word;
+
+		/* Subtle improvement for line breaks */
+		text-wrap: pretty; /* Modern browsers only */
+	}
+
+	.hero-title {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(2.75rem, 9vw, 7rem);
+		font-weight: 600;
+		line-height: 1;
+		letter-spacing: -0.025em;
+
+		orphans: 2;
+		widows: 2;
+		word-break: normal;
+		overflow-wrap: break-word;
+		text-wrap: pretty;
+	}
+	/* Style all h1 elements directly */
+	h1 {
+		color: #002e49;
+		font-family: var(
+			--font-heading
+		); /* This is already Barlow Semi Condensed */
+		font-size: clamp(2.25rem, 7vw, 6rem);
+		font-weight: 600;
+		line-height: 1;
+		letter-spacing: -0.025em;
+	}
+
+	/* Style all h2 elements directly */
+	h2 {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(2rem, 6vw, 4rem); /* ~32px min, 64px max */
+		font-style: normal;
+		font-weight: 600;
+		line-height: 1; /* 100% */
+		letter-spacing: -0.025em;
+	}
+
+	/* Style all h3 elements directly */
+	h3 {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(1.75rem, 4.5vw, 3rem); /* ~28px min, 48px max */
+		font-style: normal;
+		font-weight: 600;
+		line-height: 1.1; /* 110% */
+		letter-spacing: -0.025em;
+	}
+
+	/* Style all h4 elements directly */
+	h4 {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(1.5rem, 3.5vw, 2.5rem); /* ~24px min, 40px max */
+		font-style: normal;
+		font-weight: 600;
+		line-height: 1.1; /* 110% */
+		letter-spacing: -0.025em;
+	}
+
+	/* Style all h5 elements directly */
+	h5 {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(1.25rem, 2.5vw, 2rem); /* ~20px min, 32px max */
+		font-style: normal;
+		font-weight: 600;
+		line-height: 1.2; /* 120% */
+		letter-spacing: -0.025em;
+	}
+
+	/* Style all h6 elements directly */
+	h6 {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(1.125rem, 2vw, 1.75rem); /* ~18px min, 28px max */
+		font-style: normal;
+		font-weight: 600;
+		line-height: 1.2; /* 120% */
+		letter-spacing: -0.025em;
+	}
+
+	/* Typography utilities  */
+
+	.text-overline {
+		color: #802a00;
+		font-family: var(--font-heading);
+		font-size: clamp(1rem, 1.5vw, 1.25rem); /* ~16px min, 20px max */
+		font-style: normal;
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: 1px;
+	}
+
+	.text-subheading {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(1.37rem, 2vw, 1.5rem); /* ~20px min, 24px max */
+		font-style: normal;
+		font-weight: 400;
+		line-height: 1.25;
+	}
+
+	.text-paragraph {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(1.25rem, 2vw, 1.5rem); /* ~20px min, 24px max */
+		font-style: normal;
+		font-weight: 400;
+		line-height: 1.35;
+	}
+
+	.text-caption {
+		color: #002e49;
+		font-family: var(--font-heading);
+		font-size: clamp(0.875rem, 1.25vw, 1rem); /* ~14px min, 16px max */
+		font-style: normal;
+		font-weight: 400;
+		line-height: 1;
+	}
+
+	.text-button {
+		color: #802a00;
+		font-family: var(--font-heading);
+		font-size: clamp(1rem, 1.5vw, 1.25rem); /* ~16px min, 20px max */
+		font-style: normal;
+		font-weight: 600;
+		line-height: 1.05;
+	}
+}
+
+html {
+	@apply scroll-smooth;
+}
+
+
+
+
+
+
+
+
+.dot-bg {
+	@apply bg-[radial-gradient(#BFBBAA_1px,_transparent_0px)] bg-[length:16px_16px];
+}
+/* CONTACT FORM */
+.form-container {
+	@apply w-[75vw] mx-auto p-8;
+}
+
+.form-header {
+	@apply mb-8;
+}
+
+.form-title {
+	@apply text-3xl font-bold mb-2;
+}
+
+.form-subtitle {
+	@apply text-sm;
+}
+
+.form-fields {
+	@apply space-y-6 mb-6;
+}
+
+.form-field {
+	@apply w-full;
+}
+
+.form-label {
+	@apply block text-sm font-semibold mb-2;
+}
+
+.form-input {
+	@apply w-full px-4 py-3 border rounded 
+		focus:outline-none focus:ring-2
+		transition-all duration-200;
+}
+
+.form-submit {
+	@apply mx-auto bg-dark/20 text-button border p-4
+		hover:opacity-90 active:opacity-80
+		disabled:opacity-50 disabled:cursor-not-allowed
+		transition-all duration-200;
+}
+
+.form-message {
+	@apply mt-4 p-4 rounded text-sm font-medium border;
+}
+
+.scrollbar-hide {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+}
+
+.no-scroll {
+	overflow: hidden !important;
+	height: 100% !important;
+}
