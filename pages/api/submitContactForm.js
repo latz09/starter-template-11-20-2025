@@ -1,86 +1,65 @@
 // /pages/api/submitContactForm.js
 import { sanityClient } from '@/utils/cms/sanityConnection';
-import { generateAutomaticResponse } from '@/utils/email-configuration/generateAutomaticResponse';
-import { generateClientEmail } from '@/utils/email-configuration/generateClientEmail';
+import { EmailTemplateBuilder } from '@/utils/client-config/emailTemplateBuilder';
+import { clientConfig } from '@/utils/client-config/clientConfig';
 import transporter from '@/utils/nodemailer/transporter';
 
 export default async function handler(req, res) {
-	// Validate HTTP method
 	if (req.method !== 'POST') {
 		res.setHeader('Allow', ['POST']);
 		return res.status(405).end(`Method ${req.method} Not Allowed`);
 	}
 
-	// Validate required fields (only name and email are required)
-	const { name, email, phoneNumber, description } = req.body;
-	if (!name || !email) {
+	// Validate required fields dynamically based on clientConfig
+	const requiredFields = clientConfig.formFields.filter(f => f.required);
+	const missingFields = requiredFields.filter(f => !req.body[f.name]);
+	
+	if (missingFields.length > 0) {
 		return res.status(400).json({
 			success: false,
-			message: 'Missing required fields: name and email are required.',
+			message: `Missing required fields: ${missingFields.map(f => f.label).join(', ')}`,
 		});
 	}
 
-	// Use default values if phoneNumber or description are missing
-	const finalPhoneNumber = phoneNumber || 'Not provided';
-	const finalDescription = description || 'Not provided';
-
-	// Prepare email options for client notification and automatic response
-	const clientMailOptions = generateClientEmail({
-		name,
-		email,
-		phoneNumber: finalPhoneNumber,
-		description: finalDescription,
-	});
-	const autoEmailOptions = generateAutomaticResponse({
-		name,
-		email,
-		phoneNumber: finalPhoneNumber,
-		description: finalDescription,
+	// Build form data with defaults for optional fields
+	const formData = {};
+	clientConfig.formFields.forEach(field => { 
+		formData[field.name] = req.body[field.name] || 'Not provided';
 	});
 
-	// Initiate email sending concurrently
+	// Generate emails using the new template builder
+	const emailBuilder = new EmailTemplateBuilder(clientConfig);
+	const clientEmail = emailBuilder.buildClientEmail(formData);
+	const autoResponse = emailBuilder.buildAutoResponse(formData);
+
+	// Send emails concurrently
 	const emailPromise = Promise.all([
-		transporter.sendMail(clientMailOptions),
-		transporter.sendMail(autoEmailOptions),
+		transporter.sendMail(clientEmail),
+		transporter.sendMail(autoResponse),
 	]).catch((error) => {
 		console.error('Error sending emails:', error);
 	});
 
-	// Process the Sanity data storage separately so emails run regardless
+	// Store in Sanity
 	let sanityResult = null;
 	try {
 		sanityResult = await sanityClient.create({
-			_type: 'contactForm',
-			name,
-			email,
-			phoneNumber: finalPhoneNumber,
-			description: finalDescription,
+			_type: 'submittedContactForm', // Make sure this matches your Sanity schema
+			...formData,
 			sentAt: new Date().toISOString(),
 		});
 	} catch (sanityError) {
 		console.error('Error storing data in Sanity:', sanityError);
-		// Continue execution even if Sanity fails
 	}
 
-	// Wait for the email sending to complete
-	try {
-		await emailPromise;
-	} catch (emailError) {
-		console.error('Error in email sending process:', emailError);
-	}
+	// Wait for emails to finish
+	await emailPromise;
 
-	// Return a response; note that even if Sanity fails, emails have been sent.
-	if (!sanityResult) {
-		return res.status(200).json({
-			success: true,
-			message:
-				'Form submitted successfully, but encountered an error storing data.',
-			data: null,
-		});
-	}
 	return res.status(200).json({
 		success: true,
-		message: 'Form submitted successfully',
+		message: sanityResult 
+			? 'Form submitted successfully' 
+			: 'Form submitted successfully, but encountered an error storing data.',
 		data: sanityResult,
 	});
 }
