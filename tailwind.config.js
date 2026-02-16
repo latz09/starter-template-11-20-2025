@@ -9,12 +9,12 @@ module.exports = {
 	],
 	theme: {
 		colors: {
-			primary: '#18a1ad',
-			secondary: '#779E43',
-			tertiary: '#ffee65',
-			accent: '#FF6B35',
-			dark: '#001D20',
-			light: '#F8FEFF',
+			primary: '#025088',
+			secondary: '#35B3E4',
+			accent: '#DAEAEF',
+
+			dark: '#001A2C',
+			light: '#F1F1F1',
 
 			transparent: 'transparent',
 			current: 'currentColor',
@@ -23,28 +23,45 @@ module.exports = {
 		},
 
 		fontFamily: {
-			body: ['var(--font-barlow)', ...fontFamily.sans],
-			heading: ['var(--font-barlow)', ...fontFamily.sans],
+			default: ['var(--font-fustat)', ...fontFamily.sans],
+			secondary: ['var(--font-open-sans)', ...fontFamily.sans],
 		},
 
 		// Full spacing scale - customize all values here
 		spacing: {
 			0: '0',
-			1: '0.25rem', // 4px
-			2: '0.5rem', // 8px
-			3: '0.75rem', // 12px
-			4: '1rem', // 16px
-			6: '1.5rem', // 24px
-			8: '2rem', // 32px
-			12: '3rem', // 48px
-			16: '4rem', // 64px
-			20: '5rem', // 80px
-			24: '6rem', // 96px
-			32: '8rem', // 128px
-			// Your custom spacing
-			section: '5rem', // 80px
-			'section-sm': '3rem', // 48px
-			container: '1.5rem', // 24px
+			0.25: '0.25rem',
+			0.5: '0.5rem',
+			0.75: '0.75rem',
+			1: '1rem',
+			1.25: '1.25rem',
+			1.5: '1.5rem',
+			2: '2rem',
+			2.5: '2.5rem',
+			3: '3rem',
+			3.75: '3.75rem',
+			4: '4rem',
+			5: '5rem',
+			5.5: '5.5rem',
+			6: '6rem',
+			7.5: '7.5rem',
+			8: '8rem',
+			8.75: '8.75rem',
+			10: '10rem',
+			12: '12rem',
+			16: '16rem',
+			22: '22rem',
+			24: '24rem',
+			32: '32rem',
+			// Design system spacing
+			none: '0',
+			xxs: '1rem', // 16px
+			xs: '1.5rem', // 24px
+			sm: '2rem', // 32px
+			md: '2.5rem', // 40px
+			lg: '4rem', // 64px
+			xl: '5rem', // 80px
+			xxl: '8.75rem', // 140px
 		},
 		zIndex: {
 			0: '0',
@@ -55,22 +72,19 @@ module.exports = {
 			50: '50',
 			auto: 'auto',
 		},
-		
 
 		borderRadius: {
 			none: '0',
-			DEFAULT: '4px',
-			sm: '4px',
-			md: '4px',
-			lg: '4px',
-			xl: '4px',
-			'2xl': '4px',
+			DEFAULT: '1rem',
+			sm: '0.5rem',
+			lg: '1rem',
+			'2xl': '1rem',
 			full: '9999px',
 		},
 
 		boxShadow: {
 			none: 'none',
-			soft: '0 2px 8px rgba(0, 0, 0, 0.08)',
+			soft: '0 1px 8px rgba(0, 0, 0, 0.08)',
 			card: '0 4px 16px rgba(0, 0, 0, 0.1)',
 			lifted: '0 8px 24px rgba(0, 0, 0, 0.12)',
 		},
@@ -85,6 +99,15 @@ module.exports = {
 			},
 			transitionDuration: {
 				DEFAULT: '300ms',
+			},
+			animation: {
+				scroll: 'scroll 70s linear infinite',
+			},
+			keyframes: {
+				scroll: {
+					'0%': { transform: 'translateX(0)' },
+					'100%': { transform: 'translateX(-50%)' },
+				},
 			},
 		},
 	},

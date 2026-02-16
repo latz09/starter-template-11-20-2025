@@ -55,15 +55,15 @@ const MobileNavbar = ({ navLinks = [] }) => {
 						<ModalOverlay isOpen={isNavOpen} onClose={toggleNav} />
 						<motion.nav
 							{...menuMotion}
-							className='text-dark fixed inset-0 px-8 pt-24 pb-16 flex flex-col justify-center z-[9999]'
+							className='text-dark fixed inset-0 px-2 pt-6 pb-4 flex flex-col justify-center z-[9999]'
 							onClick={(e) => e.stopPropagation()}
 							role='dialog'
 							aria-modal='true'
 						>
-							<ul className='w-full space-y-6 text-center'>
+							<ul className='w-full space-y-1.5 text-center'>
 								{navLinks.map((link, index) => (
 									<li key={index}>
-										<Link href={link.href} onClick={toggleNav} className='block w-full text-subheading border border-dark/50  rounded py-2 transition-all duration-200'>
+										<Link href={link.href} onClick={toggleNav} className='block w-full text-subheading border border-dark/50 rounded py-0.5 transition-all duration-200'>
 											{link.title}
 										</Link>
 									</li>

@@ -25,35 +25,29 @@ export const metadata = {
 };
 
 export default async function Home() {
-	// const [data] = await fetchContent(query);
-	// console.log(data);
-
 	return (
 		<PageContainer>
-			<div className='mt-4 text-center space-y-2'>
-				<div className='flex flex-col sm:flex-row justify-center items-center gap-4'>
+			<div className='mt-1 text-center space-y-0.5'>
+				<div className='flex flex-col sm:flex-row justify-center items-center gap-1'>
 					<ButtonLink href='/sitemap.xml' variant='dark-light'>
 						View Sitemap Index
 					</ButtonLink>
 					<ButtonLink href='/sitemap-0.xml' variant='primary-light'>
 						View Page URLs
 					</ButtonLink>
-
 					<ButtonLink href='/robots.txt' variant='light-dark'>
 						View Robots.txt
 					</ButtonLink>
 				</div>
 			</div>
-		
-				
-	
+
 			<Typography />
 			<ColorPalette />
 			<SpacingScale />
 			<ButtonPreviews />
 
-			<AnimateFade className=' max-w-3xl mx-auto grid place-items-center'>
-				<ul className='space-y-2 '>
+			<AnimateFade className='max-w-3xl mx-auto grid place-items-center'>
+				<ul className='space-y-0.5'>
 					<li>Create new CMS project</li>
 					<li>
 						Include <code>contact-form-schema-template</code> in CMS
@@ -80,5 +74,3 @@ export default async function Home() {
 		</PageContainer>
 	);
 }
-
-// Animations,

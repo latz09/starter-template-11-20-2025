@@ -4,13 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-	--font-body: 'Lato', sans-serif;
-	--font-heading: 'Oswald', sans-serif;
-}
-
 body {
-	@apply bg-light font-body;
+	@apply bg-light font-default;
 	@apply antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }

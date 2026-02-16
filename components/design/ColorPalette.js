@@ -7,7 +7,6 @@ const fullConfig = resolveConfig(tailwindConfig);
 const ColorPalette = () => {
 	const colors = fullConfig.theme.colors;
 
-	// Filter out utility colors and only show your brand colors
 	const brandColors = [
 		{ name: 'Primary', var: 'primary' },
 		{ name: 'Secondary', var: 'secondary' },
@@ -18,22 +17,22 @@ const ColorPalette = () => {
 	];
 
 	return (
-		<div className='max-w-5xl mx-auto px-8 py-16 border rounded bg-[#ffffff] shadow-card'>
-			<h2 className='mb-8'>Color Palette</h2> 
-			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+		<div className='max-w-5xl mx-auto px-2 py-4 border rounded bg-[#ffffff] shadow-card'>
+			<h2 className='mb-2'>Color Palette</h2>
+			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1.5'>
 				{brandColors.map((color) => (
 					<div
 						key={color.var}
 						className='border border-dark/40 rounded overflow-hidden'
 					>
 						<div
-							className='h-32 w-full'
+							className='h-[8rem] w-full'
 							style={{ backgroundColor: colors[color.var] }}
 						/>
-						<div className='p-4 space-y-1'>
-							<p className='font-semibold text-lg'>{color.name}</p>
-							<p className='text-sm text-gray-600 uppercase'>{colors[color.var]}</p>
-							<p className='text-xs font-mono text-gray-500'>
+						<div className='p-1 space-y-0.25'>
+							<p className='font-semibold text-[1.125rem]'>{color.name}</p>
+							<p className='text-[0.875rem] text-dark/60 uppercase'>{colors[color.var]}</p>
+							<p className='text-[0.75rem] font-mono text-dark/50'>
 								bg-{color.var}
 							</p>
 						</div>

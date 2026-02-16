@@ -3,7 +3,7 @@ import Logo from '@/components/lib/Logo';
 
 const DesktopNavbar = ({ navLinks }) => {
 	return (
-		<div className='hidden lg:flex items-center gap-12 max-w-container mx-auto'>
+	<div className='hidden lg:flex items-center gap-3 max-w-container mx-auto'>
 			<Logo
 				height = {125}
 				width = {125}

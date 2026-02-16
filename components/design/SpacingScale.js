@@ -7,31 +7,30 @@ const fullConfig = resolveConfig(tailwindConfig);
 const SpacingScale = () => {
 	const spacing = fullConfig.theme.spacing;
 
-	// Convert spacing object to array and sort
 	const allSpacing = Object.entries(spacing).map(([key, value]) => ({
 		key,
 		value,
 	}));
 
 	return (
-		<div className='max-w-5xl mx-auto px-8 py-16'>
-			<h2 className='mb-8'>Spacing Scale</h2>
-			<div className='space-y-4'>
+		<div className='max-w-5xl mx-auto px-2 py-4'>
+			<h2 className='mb-2'>Spacing Scale</h2>
+			<div className='space-y-1'>
 				{allSpacing.map((space) => (
 					<div
 						key={space.key}
-						className='border border-gray-200 rounded p-4'
+						className='border border-dark/20 rounded p-1'
 					>
-						<div className='flex items-center justify-between mb-2'>
+						<div className='flex items-center justify-between mb-0.5'>
 							<div>
 								<p className='font-semibold'>Space {space.key}</p>
-								<p className='text-sm text-gray-600'>{space.value}</p>
-								<p className='text-xs font-mono text-gray-500'>
+								<p className='text-[0.875rem] text-dark/60'>{space.value}</p>
+								<p className='text-[0.75rem] font-mono text-dark/50'>
 									p-{space.key} or m-{space.key}
 								</p>
 							</div>
 						</div>
-						<div className='bg-gray-100 h-6 relative'>
+						<div className='bg-dark/10 h-[1.5rem] relative'>
 							<div
 								className='bg-primary h-full'
 								style={{ width: space.value }}

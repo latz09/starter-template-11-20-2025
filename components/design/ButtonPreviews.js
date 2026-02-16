@@ -2,10 +2,10 @@ import ButtonLink from "../ui/ButtonLink";
 
 const ButtonPreviews = () => {
 	return (
-		<div className="my-12">
+		<div className="my-3">
 			{/* Light background buttons */}
-			<div className='max-w-5xl mx-auto px-8 grid place-items-center border-t '>
-				<div className='py-4 flex gap-4'>
+			<div className='max-w-5xl mx-auto px-2 grid place-items-center border-t'>
+				<div className='py-1 flex gap-1'>
 					<ButtonLink variant='primary-on-light' href='#'>
 						Primary on Light
 					</ButtonLink>
@@ -20,8 +20,8 @@ const ButtonPreviews = () => {
 
 			{/* Dark background section */}
 			<div className='bg-dark grid place-items-center'>
-				<div className='max-w-5xl mx-auto px-8 '>
-					<div className=' py-4 flex gap-4'>
+				<div className='max-w-5xl mx-auto px-2'>
+					<div className='py-1 flex gap-1'>
 						<ButtonLink variant='primary-on-dark' href='#'>
 							Primary on Dark
 						</ButtonLink>

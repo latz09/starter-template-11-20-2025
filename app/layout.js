@@ -4,14 +4,20 @@ import Footer from '@/components/layout/navigation/Footer';
 import { mainLayoutMetadata } from '@/lib/seo/mainLayoutMetadata';
 import NavigationContainer from '@/components/layout/navigation/NavigationContainer';
 import './globals.css';
-import { Barlow_Semi_Condensed } from 'next/font/google';
+import { Fustat, Open_Sans } from 'next/font/google';
 
-const barlow = Barlow_Semi_Condensed({
+const fustat = Fustat({
 	subsets: ['latin'],
-	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-	style: ['normal', 'italic'],
+	weight: ['200', '300', '400', '500', '600', '700', '800'],
 	display: 'swap',
-	variable: '--font-barlow',
+	variable: '--font-fustat',
+});
+
+const openSans = Open_Sans({
+	subsets: ['latin'],
+	weight: ['300', '400', '500', '600', '700', '800'],
+	display: 'swap',
+	variable: '--font-open-sans',
 });
 
 export const metadata = {
@@ -52,7 +58,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang='en'>
-			<body className={`min-h-screen  ${barlow.variable} `}>
+		<body className={`min-h-screen ${fustat.variable} ${openSans.variable}`}>
 				<NavigationContainer />
 				{children}
 				<Analytics />
