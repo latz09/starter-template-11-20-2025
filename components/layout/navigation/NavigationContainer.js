@@ -1,12 +1,16 @@
 import MobileNavbar from '../../modals/MobileNavbar';
 import DesktopNavbar from './DesktopNavbar';
-import { navigationLinks } from '@/data/navigationLinks';
+import { fetchContent as f } from '@/utils/cms/fetchContent';
+import { FETCH_NAVIGATION_QUERY as Q } from '@/data/queries/navigation/FETCH_NAVIGATION_QUERY';
 
-const NavigationContainer = () => {
+const NavigationContainer = async () => {
+	const data = await f(Q);
+	const navlinks = data?.navLinks || [];
+
 	return (
-		<nav className='py-2 px-container'>
-			<MobileNavbar navLinks={navigationLinks} />
-			<DesktopNavbar navLinks={navigationLinks} />
+		<nav className='px-0.25 py-1'>
+			<MobileNavbar navLinks={navlinks} />
+			<DesktopNavbar navLinks={navlinks} />
 		</nav>
 	);
 };

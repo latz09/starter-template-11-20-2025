@@ -1,4 +1,6 @@
 import { Analytics } from '@vercel/analytics/next';
+import { draftMode } from 'next/headers';
+import VisualEditingClient from '@/components/ui/VisualEditingClient';
 
 import Footer from '@/components/layout/navigation/Footer';
 import { mainLayoutMetadata } from '@/lib/seo/mainLayoutMetadata';
@@ -55,14 +57,15 @@ export const metadata = {
 	},
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
 	return (
 		<html lang='en'>
-		<body className={`min-h-screen ${fustat.variable} ${openSans.variable}`}>
+			<body className={`min-h-screen ${fustat.variable} ${openSans.variable}`}>
 				<NavigationContainer />
 				{children}
 				<Analytics />
 				<Footer />
+				{(await draftMode()).isEnabled && <VisualEditingClient />}
 			</body>
 		</html>
 	);

@@ -1,18 +1,20 @@
-import { createClient } from '@sanity/client';
+import { createClient } from 'next-sanity';
 import imageUrlBuilder from '@sanity/image-url';
 
 export const sanityClient = createClient({
-	projectId: process.env.SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-	apiVersion: '2022-03-07',
-	useCdn: false,
-	token: process.env.SANITY_API_TOKEN,
+    projectId: process.env.SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    apiVersion: '2022-03-07',
+    useCdn: false,
+    token: process.env.SANITY_API_TOKEN,
+    stega: {
+        enabled: true,
+        studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'http://localhost:3333',
+    },
 });
 
-// Image URL builder
 const builder = imageUrlBuilder(sanityClient);
 
-// Basic URL builder function
 export function urlFor(source) {
-  return builder.image(source);
+    return builder.image(source);
 }

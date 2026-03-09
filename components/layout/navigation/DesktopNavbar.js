@@ -11,8 +11,8 @@ const DesktopNavbar = ({ navLinks }) => {
 			/>
 			<nav className='flex justify-around items-center w-full'>
 				{navLinks.map((link, index) => (
-					<Link key={index} href={link.href} className='block text-subheading 	transition-all duration-200 cursor-pointer'>
-						{link.title}
+					<Link key={index} href={link.url} className='block text-subheading 	transition-all duration-200 cursor-pointer'>
+						{link.label}
 					</Link>
 				))}
 			</nav>
