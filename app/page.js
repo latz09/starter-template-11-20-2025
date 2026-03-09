@@ -18,6 +18,7 @@ import ButtonPreviews from '@/components/design/ButtonPreviews';
 import ColorPalette from '@/components/design/ColorPalette';
 import SpacingScale from '@/components/design/SpacingScale';
 import SanitySetup from '@/data/set-up/SanitySetup';
+import SEOSetup from '@/data/set-up/SEOSetup';
 
 export const metadata = {
 	alternates: {
@@ -28,7 +29,8 @@ export const metadata = {
 export default async function Home() {
 	return (
 		<PageContainer>
-			<SanitySetup />
+			{/* <SanitySetup /> */}
+			<SEOSetup />
 			<AnimateFade className='max-w-3xl mx-auto grid place-items-center'>
 				<ul className='space-y-0.5'>
 					
