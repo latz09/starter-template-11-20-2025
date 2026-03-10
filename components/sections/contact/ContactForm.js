@@ -14,7 +14,7 @@ const ContactForm = ({
 			<div className='mb-2'>
 				<h2>Get in Touch</h2>
 				<p className='text-paragraph text-dark/60'>
-					Fill out the form below and we'll get back to you shortly.
+					Fill out the form below and we will get back to you shortly.
 				</p>
 			</div>
 
