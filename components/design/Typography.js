@@ -51,7 +51,7 @@ export const Typography = () => {
 			<div className='border-b border-dark/20 pb-2'>
 				<p className='text-[0.75rem] font-semibold uppercase tracking-[0.05em] text-dark/50 mb-1'>Paragraph</p>
 				<p className='text-paragraph'>
-					This is body text for longer paragraphs and general content. It's
+					This is body text for longer paragraphs and general content. It is
 					designed for readability and comfortable reading at various screen
 					sizes.
 				</p>
