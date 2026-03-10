@@ -23,13 +23,13 @@ const ColorPalette = () => {
 				{brandColors.map((color) => (
 					<div
 						key={color.var}
-						className='border border-dark/40 rounded overflow-hidden'
+						className='group border border-dark/40 rounded overflow-hidden'
 					>
 						<div
-							className='h-[8rem] w-full'
+							className='h-[8rem] w-full group-hover:h-full transition-all duration-300'
 							style={{ backgroundColor: colors[color.var] }}
 						/>
-						<div className='p-1 space-y-0.25'>
+						<div className='p-1 space-y-0.25 group-hover:hidden'>
 							<p className='font-semibold text-[1.125rem]'>{color.name}</p>
 							<p className='text-[0.875rem] text-dark/60 uppercase'>{colors[color.var]}</p>
 							<p className='text-[0.75rem] font-mono text-dark/50'>
