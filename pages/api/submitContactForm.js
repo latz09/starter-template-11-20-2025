@@ -1,7 +1,7 @@
 // /pages/api/submitContactForm.js
 import { sanityClient } from '@/utils/cms/sanityConnection';
-import { EmailTemplateBuilder } from '@/utils/client-config/emailTemplateBuilder';
-import { clientConfig } from '@/utils/client-config/clientConfig';
+import { EmailTemplateBuilder } from '@/utils/email-configuration/client-config/emailTemplateBuilder';
+import { clientConfig } from '@/utils/email-configuration/client-config/clientConfig';
 import transporter from '@/utils/nodemailer/transporter';
 
 export default async function handler(req, res) {

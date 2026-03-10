@@ -564,7 +564,7 @@ const seoSettingsSchemaCode = `export default {
   preview: {
     select: { title: 'siteName', subtitle: 'siteUrl' },
   },
-}\`;
+}`;
 
 // ─── Step 7 — .env.local ──────────────────────────────────────────────────────
 const envCode = `# Sanity (server-side)
