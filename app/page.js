@@ -36,7 +36,7 @@ export default async function Home() {
 	
 	return (
 		<PageContainer>
-			{/* <SanitySetup /> */}
+			<SanitySetup />
 			<SEOSetup />
 			<AnimateFade className='max-w-3xl mx-auto grid place-items-center'>
 				<ul className='space-y-0.5'>
