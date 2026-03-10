@@ -12,9 +12,7 @@ const CodeBlock = ({ code, language = '' }) => {
 	return (
 		<div className='rounded-sm overflow-hidden border border-primary bg-dark'>
 			<div className='flex items-center justify-between px-1 py-0.5 bg-dark border-b border-primary'>
-				<span className='text-xs text-secondary font-secondary'>
-					{language}
-				</span>
+				<span className='text-xs text-secondary font-secondary'>{language}</span>
 				<button
 					onClick={handleCopy}
 					className='text-xs text-white hover:text-secondary transition-colors px-0.75 py-0.25 rounded-sm font-secondary'
@@ -53,27 +51,37 @@ const Note = ({ children }) => (
 	</p>
 );
 
-// ─── FILE REFERENCE ───────────────────────────────────────────────────────────
-const fileStructure = `schemaTypes/
-  seoSettings.js              ← singleton: site-wide SEO + schema.org data
-  partials/
-    seoField.js               ← reusable object field, spread into any page schema
+const RefRow = ({ file, note }) => (
+	<div className='flex gap-0.75 items-start py-0.25'>
+		<code className='text-xs text-primary font-secondary shrink-0'>{file}</code>
+		<span className='text-xs font-secondary text-dark opacity-50'>—</span>
+		<span className='text-xs font-secondary text-dark opacity-60'>{note}</span>
+	</div>
+);
 
-utils/
-  cms/
-    fetchSeoSettings.js       ← cached fetch, used by layout + buildPageMetadata
-  seo/
-    buildPageMetadata.js      ← one helper called on every page
+// ─── FILE MAP ─────────────────────────────────────────────────────────────────
+const fileStructure = `SANITY STUDIO  (you set this up per project)
+  schemaTypes/
+    seoSettings.js              ← singleton: site-wide SEO + schema.org data
+    homePage.js                 ← starter page schema
+    aboutPage.js                ← starter page schema
+    servicesPage.js             ← starter page schema
+    contactPage.js              ← starter page schema
+    partials/
+      seoField.js               ← reusable SEO object, spread into any page schema
+    index.js                    ← register all schemas
+  structure.js                  ← sidebar structure + singleton actions
 
-lib/seo/
-  buildOrganizationSchema.js  ← builds JSON-LD from seoSettings data
-  buildFaqSchema.js           ← use on pages with FAQ sections
-  buildBreadcrumbSchema.js    ← use on pages with nested URLs
+NEXT.JS  (already in starter template — do not recreate)
+  utils/cms/fetchSeoSettings.js
+  utils/seo/buildPageMetadata.js
+  lib/seo/buildOrganizationSchema.js
+  lib/seo/buildFaqSchema.js
+  lib/seo/buildBreadcrumbSchema.js
+  components/seo/JsonLd.js
+  app/layout.js                 ← generateMetadata() already wired`;
 
-components/seo/
-  JsonLd.js                   ← drops the <script> tag into the page`;
-
-// ─── STEP 1 — seoSettings schema ─────────────────────────────────────────────
+// ─── STEP 1 — seoSettings ─────────────────────────────────────────────────────
 const seoSettingsCode = `// schemaTypes/seoSettings.js
 
 export default {
@@ -148,13 +156,13 @@ export default {
       description: 'Organization for non-physical businesses. LocalBusiness for everyone else.',
       options: {
         list: [
-          { title: 'Organization', value: 'Organization' },
-          { title: 'LocalBusiness', value: 'LocalBusiness' },
-          { title: 'Restaurant', value: 'Restaurant' },
-          { title: 'HomeAndConstructionBusiness', value: 'HomeAndConstructionBusiness' },
-          { title: 'CleaningService', value: 'CleaningService' },
-          { title: 'Photographer', value: 'Photographer' },
-          { title: 'InsuranceAgency', value: 'InsuranceAgency' },
+          { title: 'Organization',                   value: 'Organization' },
+          { title: 'LocalBusiness',                  value: 'LocalBusiness' },
+          { title: 'Restaurant',                     value: 'Restaurant' },
+          { title: 'HomeAndConstructionBusiness',    value: 'HomeAndConstructionBusiness' },
+          { title: 'CleaningService',                value: 'CleaningService' },
+          { title: 'Photographer',                   value: 'Photographer' },
+          { title: 'InsuranceAgency',                value: 'InsuranceAgency' },
         ],
         layout: 'radio',
       },
@@ -203,9 +211,8 @@ export default {
   },
 }`;
 
-// ─── STEP 2 — seoField partial ────────────────────────────────────────────────
+// ─── STEP 2 — seoField + page schemas ────────────────────────────────────────
 const seoFieldCode = `// schemaTypes/partials/seoField.js
-// Reusable SEO field — spread into any page schema with ...seoField
 
 export const seoField = [
   {
@@ -232,7 +239,6 @@ export const seoField = [
         name: 'keywords',
         type: 'array',
         title: 'Keywords',
-        description: 'Page-specific keywords. Leave blank to use site defaults.',
         of: [{ type: 'string' }],
         options: { layout: 'tags' },
       },
@@ -254,59 +260,163 @@ export const seoField = [
   },
 ]`;
 
-// ─── STEP 2b — usage in a page schema ────────────────────────────────────────
-const seoFieldUsageCode = `// schemaTypes/homePage.js — example using seoField
+const pageSchemaCode = `// schemaTypes/homePage.js
 import { seoField } from './partials/seoField'
-
 export default {
-  name: 'homePage',
-  type: 'document',
-  title: 'Home Page',
+  name: 'homePage', type: 'document', title: 'Home Page',
   fields: [
-    {
-      name: 'heading',
-      type: 'string',
-      title: 'Heading',
-    },
-    // ... all your other page fields ...
-
-    ...seoField,  // ← one line, dropped at the bottom of every page schema
+    { name: 'title', type: 'string', title: 'Title', initialValue: 'Home Page' },
+    ...seoField,
   ],
+  preview: { select: { title: 'title' } },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+// schemaTypes/aboutPage.js
+import { seoField } from './partials/seoField'
+export default {
+  name: 'aboutPage', type: 'document', title: 'About Page',
+  fields: [
+    { name: 'title', type: 'string', title: 'Title', initialValue: 'About Page' },
+    ...seoField,
+  ],
+  preview: { select: { title: 'title' } },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+// schemaTypes/servicesPage.js
+import { seoField } from './partials/seoField'
+export default {
+  name: 'servicesPage', type: 'document', title: 'Services Page',
+  fields: [
+    { name: 'title', type: 'string', title: 'Title', initialValue: 'Services Page' },
+    ...seoField,
+  ],
+  preview: { select: { title: 'title' } },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+// schemaTypes/contactPage.js
+import { seoField } from './partials/seoField'
+export default {
+  name: 'contactPage', type: 'document', title: 'Contact Page',
+  fields: [
+    { name: 'title', type: 'string', title: 'Title', initialValue: 'Contact Page' },
+    ...seoField,
+  ],
+  preview: { select: { title: 'title' } },
 }`;
 
-// ─── STEP 3 — schemaTypes/index.js ───────────────────────────────────────────
+// ─── STEP 3 — index.js ───────────────────────────────────────────────────────
 const schemaIndexCode = `// schemaTypes/index.js
 
-import seoSettings from './seoSettings'
-import contactForm from './contactForm'
-import homePage    from './homePage'
-import navigation  from './navigation'
-// ... other page schemas
+import navigation   from './navigation'
+import homePage     from './homePage'
+import aboutPage    from './aboutPage'
+import servicesPage from './servicesPage'
+import contactPage  from './contactPage'
+import seoSettings  from './seoSettings'
+import contactForm  from './contactForm'
 
 export const schemaTypes = [
+  navigation,
+  homePage,
+  aboutPage,
+  servicesPage,
+  contactPage,
   seoSettings,
   contactForm,
-  homePage,
-  navigation,
 ]`;
 
-// ─── STEP 4 — structure.js snippet ───────────────────────────────────────────
-const structureSnippetCode = `// When you build structure.js for a project, paste this block in.
-// It is commented out by default — seoSettings is invisible to the client.
-// To expose it for a client on an SEO plan: uncomment and move above the divider.
+// ─── STEP 4 — structure.js ────────────────────────────────────────────────────
+const structureCode = `// sanity-studio/structure.js
 
-// S.listItem()
-//   .title('SEO Settings')
-//   .child(
-//     S.document()
-//       .schemaType('seoSettings')
-//       .documentId('seoSettings')
-//   ),`;
+import {
+  HomeIcon,
+  InfoOutlineIcon,
+  CogIcon,
+  EnvelopeIcon,
+  EarthGlobeIcon,
+  ThListIcon,
+} from '@sanity/icons'
+
+const singletonTypes = [
+  'homePage',
+  'aboutPage',
+  'servicesPage',
+  'contactPage',
+  'seoSettings',
+  'navigation',
+]
+
+export const structure = (S) =>
+  S.list()
+    .title('Content')
+    .items([
+      S.listItem()
+        .title('Home Page')
+        .icon(HomeIcon)
+        .child(S.document().schemaType('homePage').documentId('homePage')),
+
+      S.listItem()
+        .title('About Page')
+        .icon(InfoOutlineIcon)
+        .child(S.document().schemaType('aboutPage').documentId('aboutPage')),
+
+      S.listItem()
+        .title('Services Page')
+        .icon(ThListIcon)
+        .child(S.document().schemaType('servicesPage').documentId('servicesPage')),
+
+      S.listItem()
+        .title('Contact Page')
+        .icon(EnvelopeIcon)
+        .child(S.document().schemaType('contactPage').documentId('contactPage')),
+
+      S.listItem()
+        .title('Navigation')
+        .icon(EarthGlobeIcon)
+        .child(S.document().schemaType('navigation').documentId('navigation')),
+
+      S.divider(),
+
+      S.listItem()
+        .title('Form Submissions')
+        .icon(EnvelopeIcon)
+        .child(
+          S.documentTypeList('contactForm')
+            .title('Form Submissions')
+            .defaultOrdering([{ field: 'sentAt', direction: 'desc' }]),
+        ),
+
+      S.divider(),
+
+      // Hidden from client — uncomment to expose for SEO plan clients
+      // S.listItem()
+      //   .title('SEO Settings')
+      //   .icon(CogIcon)
+      //   .child(S.document().schemaType('seoSettings').documentId('seoSettings')),
+    ])
+
+export const singletonActions = (input, context) => {
+  if (singletonTypes.includes(context.schemaType)) {
+    return input.filter(
+      ({ action }) => action && !['unpublish', 'delete', 'duplicate'].includes(action),
+    )
+  }
+  return input
+}
+
+export const singletonNewDocument = (prev) =>
+  prev.filter((item) => !singletonTypes.includes(item.templateId))`;
 
 // ─── STEP 5 — GROQ queries ────────────────────────────────────────────────────
 const seoSettingsQueryCode = `// data/queries/FETCH_SEO_SETTINGS_QUERY.js
 
-export const FETCH_SEO_SETTINGS_QUERY = \`*[_type == "seoSettings"][0]{
+export const FETCH_SEO_SETTINGS_QUERY = \`*[_type == "seoSettings" && _id == "seoSettings"][0]{
   siteName,
   siteUrl,
   titleTemplate,
@@ -323,314 +433,63 @@ export const FETCH_SEO_SETTINGS_QUERY = \`*[_type == "seoSettings"][0]{
   priceRange,
 }\``;
 
-const pageSeoFragmentCode = `// Add this seo{} block to the bottom of every page query.
-// The rest of the query stays exactly the same.
+const pageQueriesCode = `// data/queries/pages/FETCH_HOMEPAGE_QUERY.js
+export const FETCH_HOMEPAGE_QUERY = \`*[_type == "homePage" && _id == "homePage"][0]{
+  title,
+  seo{ title, description, keywords, "ogImage": ogImage.asset->url, noIndex }
+}\`
 
-// Example: data/queries/pages/FETCH_ABOUT_QUERY.js
-export const FETCH_ABOUT_QUERY = \`*[_type == "aboutPage"][0]{
-  hero,
-  content,
-  // ... all your other page fields ...
+// data/queries/pages/FETCH_ABOUTPAGE_QUERY.js
+export const FETCH_ABOUTPAGE_QUERY = \`*[_type == "aboutPage" && _id == "aboutPage"][0]{
+  title,
+  seo{ title, description, keywords, "ogImage": ogImage.asset->url, noIndex }
+}\`
 
-  seo{
-    title,
-    description,
-    keywords,
-    "ogImage": ogImage.asset->url,
-    noIndex,
-  }
-}\``;
+// data/queries/pages/FETCH_SERVICESPAGE_QUERY.js
+export const FETCH_SERVICESPAGE_QUERY = \`*[_type == "servicesPage" && _id == "servicesPage"][0]{
+  title,
+  seo{ title, description, keywords, "ogImage": ogImage.asset->url, noIndex }
+}\`
 
-// ─── STEP 6 — fetchSeoSettings utility ───────────────────────────────────────
-const fetchSeoSettingsCode = `// utils/cms/fetchSeoSettings.js
+// data/queries/pages/FETCH_CONTACTPAGE_QUERY.js
+export const FETCH_CONTACTPAGE_QUERY = \`*[_type == "contactPage" && _id == "contactPage"][0]{
+  title,
+  seo{ title, description, keywords, "ogImage": ogImage.asset->url, noIndex }
+}\`
 
-import { sanityClient } from '@/utils/cms/sanityConnection'
-import { FETCH_SEO_SETTINGS_QUERY } from '@/data/queries/FETCH_SEO_SETTINGS_QUERY'
+// ⚠️  Always use _type == "x" && _id == "x" for singleton queries.
+// Prevents leftover random-ID documents from being returned instead of the singleton.
+// As you build out each page, add content fields above the seo{} block.`;
 
-export async function fetchSeoSettings() {
-  return sanityClient.fetch(
-    FETCH_SEO_SETTINGS_QUERY,
-    {},
-    { next: { revalidate: 3600 } } // 1 hour cache — SEO settings rarely change
-  )
-}`;
-
-// ─── STEP 7 — buildPageMetadata helper ───────────────────────────────────────
-const buildPageMetadataCode = `// utils/seo/buildPageMetadata.js
-// The one helper you call on every page instead of writing the same
-// fallback logic over and over.
-
-import { fetchContent }     from '@/utils/cms/fetchContent'
-import { fetchSeoSettings } from '@/utils/cms/fetchSeoSettings'
-
-export async function buildPageMetadata({ slug, query }) {
-  const [pageData, site] = await Promise.all([
-    fetchContent(query),
-    fetchSeoSettings(),
-  ])
-
-  const seo = pageData?.seo  // null if client left it blank — fallback handles it
-
-  return {
-    title:       seo?.title       ?? site.defaultTitle,
-    description: seo?.description ?? site.defaultDescription,
-    keywords:    seo?.keywords    ?? site.keywords,
-    alternates: {
-      canonical: slug,
-    },
-    robots: {
-      index:  seo?.noIndex ? false : true,
-      follow: true,
-    },
-    openGraph: {
-      title:       seo?.title       ?? site.defaultTitle,
-      description: seo?.description ?? site.defaultDescription,
-      images: [{
-        url:    seo?.ogImage ?? site.ogImage,
-        width:  1200,
-        height: 630,
-      }],
-    },
-  }
-}`;
-
-// ─── STEP 8 — layout.js diff ──────────────────────────────────────────────────
-const layoutDiffCode = `// app/layout.js — changes from starter
-// Everything else (fonts, draft mode, nav, footer) stays exactly the same.
-// Make 3 changes:
-
-// 1. REMOVE this import:
-import { mainLayoutMetadata } from '@/lib/seo/mainLayoutMetadata'
-
-// 2. ADD these imports:
-import { fetchSeoSettings }        from '@/utils/cms/fetchSeoSettings'
-import { buildOrganizationSchema } from '@/lib/seo/buildOrganizationSchema'
-import JsonLd                      from '@/components/seo/JsonLd'
-
-// ─────────────────────────────────────────────────────────────────────────────
-
-// 3. REPLACE the static metadata export:
-
-// REMOVE:
-export const metadata = {
-  metadataBase: new URL(mainLayoutMetadata.siteUrl),
-  // ... all of it
-}
-
-// ADD:
-export async function generateMetadata() {
-  const seo = await fetchSeoSettings()
-
-  return {
-    metadataBase:    new URL(seo.siteUrl),
-    applicationName: seo.siteName,
-    title: {
-      default:  seo.defaultTitle,
-      template: seo.titleTemplate,
-    },
-    description: seo.defaultDescription,
-    keywords:    seo.keywords,
-    icons: { icon: '/favicon.ico' },
-    openGraph: {
-      title:       seo.defaultTitle,
-      description: seo.defaultDescription,
-      url:         seo.siteUrl,
-      siteName:    seo.siteName,
-      images: [{ url: seo.ogImage, width: 1200, height: 630 }],
-      type: 'website',
-    },
-    twitter: {
-      card:        'summary_large_image',
-      title:       seo.defaultTitle,
-      description: seo.defaultDescription,
-      ...(seo.twitterHandle && { creator: seo.twitterHandle }),
-      images:      [seo.ogImage],
-    },
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-
-// 4. ADD JsonLd inside <body> — before {children}:
-
-export default async function RootLayout({ children }) {
-  const seo    = await fetchSeoSettings()  // same cached call — no extra Sanity hit
-  const schema = buildOrganizationSchema(seo)
-
-  return (
-    <html lang='en'>
-      <body className={\`min-h-screen \${fustat.variable} \${openSans.variable}\`}>
-        <JsonLd data={schema} />           {/* ← ADD THIS */}
-        <NavigationContainer />
-        {children}
-        <Analytics />
-        <Footer />
-        {(await draftMode()).isEnabled && <VisualEditingClient />}
-      </body>
-    </html>
-  )
-}`;
-
-// ─── STEP 9 — per-page usage ──────────────────────────────────────────────────
-const pageUsageCode = `// Every page — this is all you write. 4 lines.
-
-import { buildPageMetadata }  from '@/utils/seo/buildPageMetadata'
-import { FETCH_ABOUT_QUERY }  from '@/data/queries/pages/FETCH_ABOUT_QUERY'
-
-export async function generateMetadata() {
-  return buildPageMetadata({ slug: '/about', query: FETCH_ABOUT_QUERY })
-}
-
-export default async function About() {
-  const data = await fetchContent(FETCH_ABOUT_QUERY) // already cached — no extra call
-  // ...
-}`;
-
-const pageUsageHomepageCode = `// Homepage — title comes from seoSettings.defaultTitle directly
-// so no override needed. Canonical is just '/'.
+// ─── STEP 6 — per-page usage ──────────────────────────────────────────────────
+const pageUsageCode = `// Every page.js — same 4 lines every time, swap query + slug
 
 import { buildPageMetadata } from '@/utils/seo/buildPageMetadata'
-import { FETCH_HOMEPAGE_QUERY } from '@/data/queries/pages/FETCH_HOMEPAGE_QUERY'
+import { FETCH_ABOUTPAGE_QUERY } from '@/data/queries/pages/FETCH_ABOUTPAGE_QUERY'
 
 export async function generateMetadata() {
-  return buildPageMetadata({ slug: '/', query: FETCH_HOMEPAGE_QUERY })
-}`;
+  return await buildPageMetadata({ slug: '/about', query: FETCH_ABOUTPAGE_QUERY })
+}
 
-// ─── STEP 10 — buildOrganizationSchema ───────────────────────────────────────
-const buildOrganizationSchemaCode = `// lib/seo/buildOrganizationSchema.js
-// Builds JSON-LD from live seoSettings data.
-// One function handles all schema types — no per-client files.
+// ⚠️  Make sure seoSettings document is PUBLISHED in Sanity Studio or
+//     buildPageMetadata returns {} (empty metadata) until it exists.`;
 
-export function buildOrganizationSchema(seo) {
-  return {
-    '@context': 'https://schema.org',
-    '@type':    seo.schemaType ?? 'LocalBusiness',
-    name:        seo.siteName,
-    url:         seo.siteUrl,
-    logo:        seo.ogImage,
-    description: seo.defaultDescription,
-    telephone:   seo.phone,
-    email:       seo.email,
-    ...(seo.address && {
-      address: {
-        '@type':         'PostalAddress',
-        streetAddress:   seo.address.street,
-        addressLocality: seo.address.city,
-        addressRegion:   seo.address.state,
-        postalCode:      seo.address.zip,
-        addressCountry:  'US',
-      },
-    }),
-    ...(seo.serviceAreas?.length && {
-      areaServed: seo.serviceAreas.map((area) => ({
-        '@type': 'AdministrativeArea',
-        name: area,
-      })),
-    }),
-    ...(seo.priceRange && { priceRange: seo.priceRange }),
-    contactPoint: {
-      '@type':       'ContactPoint',
-      telephone:     seo.phone,
-      contactType:   'customer service',
-      email:         seo.email,
-      areaServed:    'US',
-    },
-  }
-}`;
-
-const jsonLdCode = `// components/seo/JsonLd.js
-
-export default function JsonLd({ data }) {
-  return (
-    <script
-      type='application/ld+json'
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  )
-}`;
-
-// ─── STEP 11 — FAQ + Breadcrumb ───────────────────────────────────────────────
-const faqSchemaCode = `// lib/seo/buildFaqSchema.js
-// Use on any page with a FAQ section.
-// faqs come from your Sanity page data — add a faqs array field to the page schema.
-
-export function buildFaqSchema(faqs) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-    })),
-  }
-}`;
-
-const breadcrumbSchemaCode = `// lib/seo/buildBreadcrumbSchema.js
-// Use on pages with nested URLs (services → individual service, etc.)
-
-export function buildBreadcrumbSchema(items) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type':    'ListItem',
-      position:   index + 1,
-      name:       item.name,
-      item:       item.url,
-    })),
-  }
-}`;
-
-const faqUsageCode = `// Any page with FAQs
-
-import JsonLd from '@/components/seo/JsonLd'
-import { buildFaqSchema } from '@/lib/seo/buildFaqSchema'
-
-export default async function Services() {
-  const data = await fetchContent(FETCH_SERVICES_QUERY)
-
-  return (
-    <>
-      <JsonLd data={buildFaqSchema(data.faqs)} />
-      {/* page content */}
-    </>
-  )
-}`;
-
-// ─── STEP 12 — next-sitemap ───────────────────────────────────────────────────
-const nextSitemapCode = `// next-sitemap.config.js
-// Already in the starter. Only change needed per project: update siteUrl.
-
-/** @type {import('next-sitemap').IConfig} */
-module.exports = {
-  siteUrl: 'https://www.clientdomain.com',  // ← update before launch
-  generateRobotsTxt: true,
-  robotsTxtOptions: {
-    policies: [{ userAgent: '*', allow: '/' }],
-  },
-  exclude: ['/api/*', '/studio/*'],
-}`;
-
-// ─── STEP 13 — checklist ──────────────────────────────────────────────────────
-const checklistCode = `SANITY
-✅  seoSettings document created and published
+// ─── STEP 7 — checklist ───────────────────────────────────────────────────────
+const checklistCode = `SANITY STUDIO
+✅  seoSettings document created and PUBLISHED
 ✅  siteName, siteUrl, defaultTitle, defaultDescription filled in
-✅  titleTemplate set  — e.g. "%s | Business Name"
+✅  titleTemplate set — e.g. "%s | Business Name"
 ✅  OG image uploaded (1200x630px)
 ✅  schemaType selected (LocalBusiness for most clients)
 ✅  phone, email, address, serviceAreas filled in
-✅  seoField spread into every page schema  — ...seoField
-✅  seo{} block added to every page GROQ query
+✅  All page documents created and PUBLISHED in Studio
+✅  seoSettings commented out of structure.js sidebar
 
-NEXT.JS
-✅  layout.js updated — generateMetadata() + JsonLd in body
-✅  buildPageMetadata() called on every page
-✅  Correct canonical slug on every page
+NEXT.JS  (already in starter — just confirm)
+✅  FETCH_SEO_SETTINGS_QUERY exists in data/queries/
+✅  Page queries exist with seo{} block in data/queries/pages/
+✅  generateMetadata() on every page with await + correct slug
 ✅  next-sitemap.config.js siteUrl updated to production domain
-
-STRUCTURE.JS  (when you build it)
-✅  seoSettings block pasted in and commented out by default
 
 PRE-LAUNCH
 ✅  /public/opengraph-image.png exists as fallback (1200x630px)
@@ -650,210 +509,132 @@ export default function SEOSetup() {
 					SEO Setup
 				</h2>
 				<p className='text-xs font-secondary text-dark opacity-60'>
-					Sanity-first. No metadata files. Fill it in Sanity while you build.
-					Hidden from clients by default — expose per plan.
+					Sanity-first. No metadata files. Fill it out while you build.
+					Next.js side is already in the starter template.
 				</p>
 			</div>
 
 			{/* File map */}
 			<div className='mb-2'>
-				<Label>Files you are creating</Label>
+				<Label>File overview</Label>
 				<CodeBlock language='file structure' code={fileStructure} />
 			</div>
 
+			{/* Next.js reference — no code, just what each file does */}
+			<div className='mb-2 p-1 rounded-sm border border-accent bg-accent/30'>
+				<p className='text-xs font-secondary font-semibold text-dark mb-0.75'>
+					Next.js files — already in starter template
+				</p>
+				<RefRow
+					file='utils/cms/fetchSeoSettings.js'
+					note='Fetches seoSettings from Sanity with 1hr cache. Used by layout + buildPageMetadata.'
+				/>
+				<RefRow
+					file='utils/seo/buildPageMetadata.js'
+					note='Called on every page. Handles Promise.all, fallback chain, OG image, noIndex. Returns {} if seoSettings not published yet.'
+				/>
+				<RefRow
+					file='lib/seo/buildOrganizationSchema.js'
+					note='Builds JSON-LD from seoSettings data. Returns null if seoSettings not published yet.'
+				/>
+				<RefRow
+					file='lib/seo/buildFaqSchema.js'
+					note='Pass an array of {question, answer} objects. Use on pages with FAQ sections.'
+				/>
+				<RefRow
+					file='lib/seo/buildBreadcrumbSchema.js'
+					note='Pass an array of {name, url} objects. Use on pages with nested URLs.'
+				/>
+				<RefRow
+					file='components/seo/JsonLd.js'
+					note='Renders a <script type="application/ld+json"> tag. Used in layout.js and on pages with FAQ/breadcrumb schema.'
+				/>
+				<RefRow
+					file='app/layout.js'
+					note='generateMetadata() pulls from fetchSeoSettings. JsonLd renders buildOrganizationSchema in <body>. Both guarded with if (!seo) checks.'
+				/>
+			</div>
+
 			<div className='space-y-0.5'>
+
 				{/* STEP 1 */}
 				<Step number={1} title='seoSettings schema — Sanity'>
 					<Note>
-						One singleton document per project. Holds everything: site identity,
-						default meta, OG image, and all schema.org data. Fill it in Sanity
-						while you&apos;re building — no separate metadata files.
+						One singleton per project. Holds everything — site identity, default
+						meta, OG image, schema.org data. Fill it out in Sanity while
+						you&apos;re building. The Next.js side reads from this automatically.
 					</Note>
 					<Label>schemaTypes/seoSettings.js</Label>
-					<CodeBlock
-						language='schemaTypes/seoSettings.js'
-						code={seoSettingsCode}
-					/>
+					<CodeBlock language='schemaTypes/seoSettings.js' code={seoSettingsCode} />
 				</Step>
 
 				{/* STEP 2 */}
-				<Step number={2} title='seoField partial — reusable page SEO field'>
+				<Step number={2} title='seoField partial + starter page schemas'>
 					<Note>
-						Write once, import everywhere. Spread <code>...seoField</code> at
-						the bottom of any page schema and the SEO block is there — collapsed
-						by default, fully optional. All fields fall back to{' '}
-						<code>seoSettings</code> when left blank.
+						<code>seoField</code> is written once and spread into every page
+						schema. All fields are optional and collapsible — blank fields fall
+						back to <code>seoSettings</code> defaults automatically. Add real
+						content fields above <code>...seoField</code> as you build out each
+						page.
 					</Note>
 					<Label>schemaTypes/partials/seoField.js</Label>
-					<CodeBlock
-						language='schemaTypes/partials/seoField.js'
-						code={seoFieldCode}
-					/>
-					<Label>Usage in any page schema</Label>
-					<CodeBlock
-						language='schemaTypes/homePage.js (example)'
-						code={seoFieldUsageCode}
-					/>
+					<CodeBlock language='schemaTypes/partials/seoField.js' code={seoFieldCode} />
+					<Label>schemaTypes/ — all 4 starter page schemas</Label>
+					<CodeBlock language='homePage · aboutPage · servicesPage · contactPage' code={pageSchemaCode} />
 				</Step>
 
 				{/* STEP 3 */}
-				<Step number={3} title='Register seoSettings in schemaTypes/index.js'>
+				<Step number={3} title='Register all schemas — schemaTypes/index.js'>
 					<Note>
-						Add <code>seoSettings</code> to your schema index. The page schemas
-						already pull in <code>seoField</code> via the spread — nothing extra
-						needed there.
+						Keep this order consistent across projects.
 					</Note>
 					<Label>schemaTypes/index.js</Label>
 					<CodeBlock language='schemaTypes/index.js' code={schemaIndexCode} />
 				</Step>
 
 				{/* STEP 4 */}
-				<Step number={4} title='structure.js — hide seoSettings from client'>
+				<Step number={4} title='structure.js — singletons + seoSettings hidden'>
 					<Note>
-						You won&apos;t have <code>structure.js</code> at project start —
-						that&apos;s fine. When you build it for a project, paste this block
-						in and leave it commented out. Clients can&apos;t see it. To expose
-						it for a client on an SEO plan: uncomment and move it above the
-						divider. Zero other changes needed.
+						All pages and navigation are singletons. <code>seoSettings</code> is
+						in <code>singletonTypes</code> so delete/duplicate/unpublish are
+						blocked — but it&apos;s commented out of the sidebar so clients
+						can&apos;t see it. To expose it for a client on an SEO plan:
+						uncomment the 4 lines at the bottom. That&apos;s the only change.
 					</Note>
-					<Label>Paste into structure.js when you build it</Label>
-					<CodeBlock
-						language='structure.js snippet'
-						code={structureSnippetCode}
-					/>
+					<Label>sanity-studio/structure.js</Label>
+					<CodeBlock language='structure.js' code={structureCode} />
 				</Step>
 
 				{/* STEP 5 */}
 				<Step number={5} title='GROQ queries'>
 					<Note>
-						Two queries. One for <code>seoSettings</code> — used by the layout
-						helper. One fragment you add to the bottom of every page query — no
-						changes to your existing fields, just tack it on.
+						<code>FETCH_SEO_SETTINGS_QUERY</code> is used by{' '}
+						<code>fetchSeoSettings.js</code> in the starter — don&apos;t
+						rename it. The 4 page queries are your starters. Add content fields
+						above <code>seo&#123;&#125;</code> as each page grows.
 					</Note>
 					<Label>data/queries/FETCH_SEO_SETTINGS_QUERY.js</Label>
-					<CodeBlock
-						language='FETCH_SEO_SETTINGS_QUERY.js'
-						code={seoSettingsQueryCode}
-					/>
-					<Label>Add seo&#123;&#125; to every page query</Label>
-					<CodeBlock
-						language='FETCH_ABOUT_QUERY.js (example)'
-						code={pageSeoFragmentCode}
-					/>
+					<CodeBlock language='FETCH_SEO_SETTINGS_QUERY.js' code={seoSettingsQueryCode} />
+					<Label>data/queries/pages/ — all 4 starter page queries</Label>
+					<CodeBlock language='page queries' code={pageQueriesCode} />
 				</Step>
 
 				{/* STEP 6 */}
-				<Step number={6} title='fetchSeoSettings utility'>
+				<Step number={6} title='Per-page generateMetadata — 4 lines per page'>
 					<Note>
-						Dedicated fetch for <code>seoSettings</code> with a 1-hour cache.
-						Used by the layout and by <code>buildPageMetadata</code> on every
-						page. Next.js deduplicates it automatically — Sanity is hit once per
-						cache window regardless of how many pages call it.
+						Import <code>buildPageMetadata</code> and the page query. Call it
+						with <code>await</code> and the canonical slug. That&apos;s it —
+						everything else is handled in the starter.
 					</Note>
-					<Label>utils/cms/fetchSeoSettings.js</Label>
-					<CodeBlock
-						language='utils/cms/fetchSeoSettings.js'
-						code={fetchSeoSettingsCode}
-					/>
+					<Label>Any page.js</Label>
+					<CodeBlock language='app/about/page.js' code={pageUsageCode} />
 				</Step>
 
 				{/* STEP 7 */}
-				<Step
-					number={7}
-					title='buildPageMetadata helper — write once, use everywhere'
-				>
-					<Note>
-						This is the helper that makes every page a 4-liner. It handles the{' '}
-						<code>Promise.all</code>, the fallback chain, the OG image, the{' '}
-						<code>noIndex</code> check — everything. You write this file once
-						and never touch it again.
-					</Note>
-					<Label>utils/seo/buildPageMetadata.js</Label>
-					<CodeBlock
-						language='utils/seo/buildPageMetadata.js'
-						code={buildPageMetadataCode}
-					/>
-				</Step>
-
-				{/* STEP 8 */}
-				<Step number={8} title='Update layout.js — 4 surgical changes'>
-					<Note>
-						Your existing layout stays almost identical. Fonts, draft mode,
-						analytics, nav, footer — all untouched. You are making 4 changes:
-						swap one import, remove the static metadata export, add{' '}
-						<code>generateMetadata()</code>, and drop{' '}
-						<code>&lt;JsonLd&gt;</code> inside the body.
-					</Note>
-					<Label>app/layout.js — diff</Label>
-					<CodeBlock language='app/layout.js (diff)' code={layoutDiffCode} />
-				</Step>
-
-				{/* STEP 9 */}
-				<Step number={9} title='generateMetadata on every page — 4 lines'>
-					<Note>
-						Every page is now this. Import the helper, import the query, call it
-						with the slug. That&apos;s the entire SEO setup per page. Fallbacks,
-						OG image, robots — all handled inside the helper.
-					</Note>
-					<Label>Any interior page</Label>
-					<CodeBlock language='app/about/page.js' code={pageUsageCode} />
-					<Label>Homepage</Label>
-					<CodeBlock language='app/page.js' code={pageUsageHomepageCode} />
-				</Step>
-
-				{/* STEP 10 */}
-				<Step number={10} title='buildOrganizationSchema + JsonLd'>
-					<Note>
-						Builds JSON-LD from live Sanity data. One function handles every
-						schema type — no per-client files. Rendered in layout so Google sees
-						it on every page.
-					</Note>
-					<Label>lib/seo/buildOrganizationSchema.js</Label>
-					<CodeBlock
-						language='lib/seo/buildOrganizationSchema.js'
-						code={buildOrganizationSchemaCode}
-					/>
-					<Label>components/seo/JsonLd.js</Label>
-					<CodeBlock language='components/seo/JsonLd.js' code={jsonLdCode} />
-				</Step>
-
-				{/* STEP 11 */}
-				<Step number={11} title='FAQ + Breadcrumb schema helpers (situational)'>
-					<Note>
-						Use <code>buildFaqSchema</code> on any page with a FAQ section —
-						Google can show Q&amp;A rich snippets in search results. Use{' '}
-						<code>buildBreadcrumbSchema</code> on pages with nested URLs.
-					</Note>
-					<Label>lib/seo/buildFaqSchema.js</Label>
-					<CodeBlock
-						language='lib/seo/buildFaqSchema.js'
-						code={faqSchemaCode}
-					/>
-					<Label>lib/seo/buildBreadcrumbSchema.js</Label>
-					<CodeBlock
-						language='lib/seo/buildBreadcrumbSchema.js'
-						code={breadcrumbSchemaCode}
-					/>
-					<Label>Usage</Label>
-					<CodeBlock language='app/services/page.js' code={faqUsageCode} />
-				</Step>
-
-				{/* STEP 12 */}
-				<Step number={12} title='next-sitemap — update siteUrl before launch'>
-					<Note>
-						Already installed in the starter and runs automatically on build.
-						The only thing you touch per project is <code>siteUrl</code>.{' '}
-						<strong>Do not</strong> add a manual <code>robots.txt</code> to{' '}
-						<code>/public</code> — next-sitemap writes it on build.
-					</Note>
-					<Label>next-sitemap.config.js</Label>
-					<CodeBlock language='next-sitemap.config.js' code={nextSitemapCode} />
-				</Step>
-
-				{/* STEP 13 */}
-				<Step number={13} title='Pre-launch checklist'>
+				<Step number={7} title='Pre-launch checklist'>
 					<CodeBlock language='checklist' code={checklistCode} />
 				</Step>
+
 			</div>
 		</section>
 	);

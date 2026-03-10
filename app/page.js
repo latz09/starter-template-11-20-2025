@@ -1,5 +1,7 @@
-// import { fetchContent } from '@/utils/cms/fetchContent';
-// import { FETCH_HOME_PAGE_DATA as query } from '@/data/queries/pages/FETCH_HOME_PAGE_DATA';
+import { fetchContent as fc } from '@/utils/cms/fetchContent';
+import { buildPageMetadata as BPM } from '@/utils/seo/buildPageMetadata';
+import { FETCH_HOME_PAGE_QUERY as Q } from '@/data/queries/pages/FETCH_HOME_PAGE_DATA';
+
 import PageContainer from '@/components/animations/PageContainer';
 import {
 	AnimateFade,
@@ -20,13 +22,18 @@ import SpacingScale from '@/components/design/SpacingScale';
 import SanitySetup from '@/data/set-up/SanitySetup';
 import SEOSetup from '@/data/set-up/SEOSetup';
 
-export const metadata = {
-	alternates: {
-		canonical: '/',
-	},
-};
+
+export async function generateMetadata() {
+  return await BPM({ slug: '/', query: Q })
+}
+
+
 
 export default async function Home() {
+	const data = await fc(Q);
+
+	
+	
 	return (
 		<PageContainer>
 			{/* <SanitySetup /> */}
@@ -71,3 +78,6 @@ export default async function Home() {
 		</PageContainer>
 	);
 }
+
+
+export const revalidate = 10;

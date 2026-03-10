@@ -1,4 +1,4 @@
-export const FETCH_HOME_PAGE_QUERY = `*[_type == "homePage"][0]{
+export const FETCH_SERVICES_PAGE_QUERY = `*[_type == "servicesPage" && _id == "servicesPage"][0]{
   title,
   seo{
     title,

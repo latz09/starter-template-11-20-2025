@@ -1,15 +1,22 @@
-import SubmitContactForm from '@/components/sections/contact/SubmitContactForm';
-import { page4Metadata } from '@/lib/seo/pageMetadata';
+import { buildPageMetadata as BPM } from '@/utils/seo/buildPageMetadata';
+import { fetchContent as fc } from '@/utils/cms/fetchContent';
+import { FETCH_CONTACT_PAGE_QUERY as Q } from '@/data/queries/pages/FETCH_CONTACT_PAGE';
+import PageContainer from '@/components/animations/PageContainer';
 
-export const metadata = page4Metadata;
-const ContactPage = () => {
+export async function generateMetadata() {
+	return BPM({ slug: '/contact', query: Q });
+}
+
+const Contact = async () => {
+	const data = await fc(Q);
 	return (
-		<div className=' grid '>
-			<div>
-				<SubmitContactForm />
-			</div>
-		</div>
+        <PageContainer>
+		<div className='h-[80vh] grid place-items-center'>
+			<div>{data?.title}</div>
+		</div></PageContainer>
 	);
 };
 
-export default ContactPage;
+export default Contact;
+
+export const revalidate = 10;
