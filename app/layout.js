@@ -9,6 +9,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import NavigationContainer from '@/components/layout/navigation/NavigationContainer';
 import './globals.css';
 import { Fustat, Open_Sans } from 'next/font/google';
+import DesignSystemBadge from '@/components/design/DesignSystemBadge';
 
 const fustat = Fustat({
 	subsets: ['latin'],
@@ -68,6 +69,7 @@ export default async function RootLayout({ children }) {
 				{children}
 				<Analytics />
 				<Footer />
+				   <DesignSystemBadge /> 
 				{(await draftMode()).isEnabled && <VisualEditingClient />}
 			</body>
 		</html>
