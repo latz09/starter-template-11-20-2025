@@ -7,17 +7,23 @@ const ContactForm = ({
 	success,
 }) => {
 	return (
-		<form onSubmit={handleSubmit} className='form-container'>
-			<div className='form-header'>
-				<h2 className='form-title'>Get in Touch</h2>
-				<p className='form-subtitle'>
-					Fill out the form below and we will get back to you shortly.
+		<form
+			onSubmit={handleSubmit}
+			className='w-full max-w-3xl mx-auto px-1 py-2'
+		>
+			<div className='mb-2'>
+				<h2>Get in Touch</h2>
+				<p className='text-paragraph text-dark/60'>
+					Fill out the form below and we'll get back to you shortly.
 				</p>
 			</div>
 
-			<div className='form-fields'>
-				<div className='form-field'>
-					<label htmlFor='name' className='form-label'>
+			<div className='space-y-1.5 mb-2'>
+				<div>
+					<label
+						htmlFor='name'
+						className='text-caption font-semibold block mb-0.5'
+					>
 						Name*
 					</label>
 					<input
@@ -28,12 +34,15 @@ const ContactForm = ({
 						onChange={handleInputChange}
 						required
 						placeholder='Your name'
-						className='form-input'
+						className='w-full px-1 py-0.75 border border-dark/20 rounded bg-white text-paragraph focus:outline-none focus:border-secondary transition-all duration-300'
 					/>
 				</div>
 
-				<div className='form-field'>
-					<label htmlFor='email' className='form-label'>
+				<div>
+					<label
+						htmlFor='email'
+						className='text-caption font-semibold block mb-0.5'
+					>
 						Email*
 					</label>
 					<input
@@ -44,12 +53,15 @@ const ContactForm = ({
 						onChange={handleInputChange}
 						required
 						placeholder='you@example.com'
-						className='form-input'
+						className='w-full px-1 py-0.75 border border-dark/20 rounded bg-white text-paragraph focus:outline-none focus:border-secondary transition-all duration-300'
 					/>
 				</div>
 
-				<div className='form-field'>
-					<label htmlFor='phoneNumber' className='form-label'>
+				<div>
+					<label
+						htmlFor='phoneNumber'
+						className='text-caption font-semibold block mb-0.5'
+					>
 						Phone Number*
 					</label>
 					<input
@@ -60,12 +72,15 @@ const ContactForm = ({
 						onChange={handleInputChange}
 						required
 						placeholder='(123) 456-7890'
-						className='form-input'
+						className='w-full px-1 py-0.75 border border-dark/20 rounded bg-white text-paragraph focus:outline-none focus:border-secondary transition-all duration-300'
 					/>
 				</div>
 
-				<div className='form-field'>
-					<label htmlFor='message' className='form-label'>
+				<div>
+					<label
+						htmlFor='message'
+						className='text-caption font-semibold block mb-0.5'
+					>
 						Message
 					</label>
 					<textarea
@@ -73,23 +88,31 @@ const ContactForm = ({
 						name='message'
 						value={formData.message}
 						onChange={handleInputChange}
-						className='form-input'
 						placeholder='Tell us about your project...'
 						rows='5'
-					></textarea>
+						className='w-full px-1 py-0.75 border border-dark/20 rounded bg-white text-paragraph focus:outline-none focus:border-secondary transition-all duration-300 resize-none'
+					/>
 				</div>
 			</div>
 
 			<button
 				type='submit'
-				className='form-submit'
 				disabled={isLoading}
+				className='w-full bg-primary text-button text-white py-0.75 rounded border border-primary hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300'
 			>
 				{isLoading ? 'Sending...' : 'Send Message'}
 			</button>
 
-			{error && <p className='form-message form-error'>{error}</p>}
-			{success && <p className='form-message form-success'>{success}</p>}
+			{error && (
+				<p className='mt-1 p-1 rounded border border-dark/20 text-caption text-dark/70 bg-white'>
+					{error}
+				</p>
+			)}
+			{success && (
+				<p className='mt-1 p-1 rounded border border-secondary text-caption text-primary bg-white'>
+					{success}
+				</p>
+			)}
 		</form>
 	);
 };
